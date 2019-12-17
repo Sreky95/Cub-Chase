@@ -14,6 +14,7 @@ class GameTerrain(QGridLayout):
         self.terrainheight = size
         parent.setGeometry(550, 100, 40, 40)
         self.setSpacing(0)
+        self.Trap1spawned = False
         loaded = False
 
         while not loaded:
@@ -79,6 +80,13 @@ class GameTerrain(QGridLayout):
                             for i in range(len(self.TerrainMatrix[j])):
                                 self.TerrainMatrix[i][j].terraintype = abs(self.TerrainMatrix[i][j].terraintype)
 
+            while not self.Trap1spawned:
+                x = random.randint(1, len(self.TerrainMatrix[0]) - 1)
+                y = random.randint(1, len(self.TerrainMatrix) - 1)
+                if self.TerrainMatrix[x][y].passable and not self.TerrainMatrix[x][y].trap:
+                    self.TerrainMatrix[x][y].trap = 10
+                    self.Trap1spawned = True
+
             for n in range(len(self.TerrainMatrix)):
                 for k in range(len(self.TerrainMatrix[n])):
                     if self.TerrainMatrix[k][n].passable:
@@ -97,16 +105,28 @@ class GameTerrain(QGridLayout):
                     self.paintWall(x, y)
                 else:
                     if (tempterrain == 1):
-                        templabel = QLabel()
-                        temppicture = QPixmap("./Pictures/Sand.png")
-                        templabel.setPixmap(temppicture.scaled(40, 40))
-                        self.addWidget(templabel, x, y)
-                    else:
-                        if (tempterrain == 2):
+                        if self.TerrainMatrix[x][y].trap == 10:
                             templabel = QLabel()
-                            temppicture = QPixmap("./Pictures/Grass.png")
+                            temppicture = QPixmap("./Pictures/SandTrapInactive.png")
                             templabel.setPixmap(temppicture.scaled(40, 40))
                             self.addWidget(templabel, x, y)
+                        else:
+                            templabel = QLabel()
+                            temppicture = QPixmap("./Pictures/Sand.png")
+                            templabel.setPixmap(temppicture.scaled(40, 40))
+                            self.addWidget(templabel, x, y)
+                    else:
+                        if (tempterrain == 2):
+                            if self.TerrainMatrix[x][y].trap == 10:
+                                templabel = QLabel()
+                                temppicture = QPixmap("./Pictures/GrassTrapInactive.png")
+                                templabel.setPixmap(temppicture.scaled(40, 40))
+                                self.addWidget(templabel, x, y)
+                            else:
+                                templabel = QLabel()
+                                temppicture = QPixmap("./Pictures/Grass.png")
+                                templabel.setPixmap(temppicture.scaled(40, 40))
+                                self.addWidget(templabel, x, y)
 
     def paintWall(self, x, y):
         templabel = QLabel()
@@ -306,6 +326,35 @@ class GameTerrain(QGridLayout):
                     reachable = self.checkIfReachable(x, y + 1)
                 return reachable
 
+    def replacePrints(self, position):
+
+        temppicture = QPixmap("./Pictures/SandPrints.png")
+        self.itemAt(position).widget().setPixmap(temppicture.scaled(40, 40))
+
+    def activateTrap(self, position, player, terrain):
+
+        print(player)
+        print(terrain)
+        if player == 1:
+            if terrain == 1:
+                temppicture = QPixmap("./Pictures/SandTrapBlue.png")
+            else:
+                temppicture = QPixmap("./Pictures/GrassTrapBlue.png")
+        if player == 2:
+            if terrain == 1:
+                temppicture = QPixmap("./Pictures/SandTrapRed.png")
+            else:
+                temppicture = QPixmap("./Pictures/GrassTrapRed.png")
+        self.itemAt(position).widget().setPixmap(temppicture.scaled(40, 40))
+
+    def deleteTrap(self, position, terrain):
+
+        if terrain == 1:
+            temppicture = QPixmap("./Pictures/Sand.png")
+        else:
+            temppicture = QPixmap("./Pictures/Grass.png")
+        self.itemAt(position).widget().setPixmap(temppicture.scaled(40, 40))
+
 
 class TerrainTile(object):
 
@@ -318,4 +367,5 @@ class TerrainTile(object):
                 self.passable = False
             else:
                 self.passable = True
-        self.footPrints = False
+        self.footprints = False
+        self.trap = 0

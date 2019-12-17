@@ -74,7 +74,7 @@ class NPCMovement(object):
             break
         while True:
             task = self.piper.recv()
-            print(task)
+            #print(task)
             if task == 0:
                 break
             else:

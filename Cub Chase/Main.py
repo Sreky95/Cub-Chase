@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QGridLayout,
                              QVBoxLayout, QWidget, QPushButton, QLabel, QStackedLayout)
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QRect, QTimer
 from PyQt5.QtGui import QPainter, QColor, QPixmap, QKeyEvent
 import sys, random, math, Terrain, NPC, threading, Player, multiprocessing, time
 
@@ -64,27 +64,19 @@ def mapping(parent):
         if temp1:
             parent.NPC1.x = temp1[0]
             parent.NPC1.y = temp1[1]
-            #parent.NPC1.__update_position__(temp1)
-            #parent.NPC1.setGeometry((temp1[1] * 40) + 16, (temp1[0] * 40) + 16, 30, 30)
-            print("1: " + str(temp1[1]) + " - " + str(temp1[0]))
+            #print("1: " + str(temp1[1]) + " - " + str(temp1[0]))
         if temp2:
             parent.NPC2.x = temp2[0]
             parent.NPC2.y = temp2[1]
-            #parent.NPC2.__update_position__(temp2)
-            #parent.NPC2.setGeometry((temp2[1] * 40) + 16, (temp2[0] * 40) + 16, 30, 30)
-            print("2: " + str(temp2[1]) + " - " + str(temp2[0]))
+            #print("2: " + str(temp2[1]) + " - " + str(temp2[0]))
         if temp3:
             parent.NPC3.x = temp3[0]
             parent.NPC3.y = temp3[1]
-            #parent.NPC3.__update_position__(temp3)
-            #parent.NPC3.setGeometry((temp3[1] * 40) + 16, (temp3[0] * 40) + 16, 30, 30)
-            print("3: " + str(temp3[1]) + " - " + str(temp3[0]))
+            #print("3: " + str(temp3[1]) + " - " + str(temp3[0]))
         if temp4:
             parent.NPC4.x = temp4[0]
             parent.NPC4.y = temp4[1]
-            #parent.NPC4.__update_position__(temp4)
-            #parent.NPC4.setGeometry((temp4[1] * 40) + 16, (temp4[0] * 40) + 16, 30, 30)
-            print("4: " + str(temp4[1]) + " - " + str(temp4[0]))
+            #print("4: " + str(temp4[1]) + " - " + str(temp4[0]))
 
         parent.display_update.emit()
 
@@ -119,11 +111,18 @@ class MainWindow(QMainWindow):
 class GameWindow(QWidget):
 
     display_update = pyqtSignal()
+    player1up = pyqtSignal()
+    player1left = pyqtSignal()
+    player1right = pyqtSignal()
+    player1down = pyqtSignal()
+    player2up = pyqtSignal()
+    player2left = pyqtSignal()
+    player2right = pyqtSignal()
+    player2down = pyqtSignal()
 
     def __init__(self, parent):
 
         super().__init__()
-        self.display_update.connect(self.guiUpdate)
         self.setWindowTitle("Cub Chase")
         self.parent = parent
         self.freespaces = 0
@@ -139,9 +138,31 @@ class GameWindow(QWidget):
         self.NPC4 = NPC.NPC(self)
         self.player1 = Player.Player(self, 1)
         self.player2 = Player.Player(self, 2)
+        self.signalsconnect()
 
         self.mappingThread = threading.Thread(target=mapping, args=(self,))
         self.mappingThread.start()
+
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.countdown)
+        self.timer.start(3000)
+
+    def countdown(self):
+
+        print("Pocetak")
+
+    def signalsconnect(self):
+
+        self.display_update.connect(self.guiUpdate)
+        self.player1up.connect(self.player1.moveup)
+        self.player1left.connect(self.player1.moveleft)
+        self.player1right.connect(self.player1.moveright)
+        self.player1down.connect(self.player1.movedown)
+        self.player2up.connect(self.player2.moveup)
+        self.player2left.connect(self.player2.moveleft)
+        self.player2right.connect(self.player2.moveright)
+        self.player2down.connect(self.player2.movedown)
 
     def guiUpdate(self):
 
@@ -155,47 +176,35 @@ class GameWindow(QWidget):
 
         key = event.key()
         player1key = False
-        player2key = False
 
         if key == Qt.Key_Up:
-            #self.player1.x -= 1
+            self.player1up.emit()
             player1key = True
         else:
             if key == Qt.Key_Left:
-                #self.player1.y -= 1
+                self.player1left.emit()
                 player1key = True
             else:
                 if key == Qt.Key_Right:
-                    #self.player1.y += 1
+                    self.player1right.emit()
                     player1key = True
                 else:
                     if key == Qt.Key_Down:
-                        #self.player1.x += 1
+                        self.player1down.emit()
                         player1key = True
 
         if not player1key:
             if key == Qt.Key_W:
-                #self.player2.x -= 1
-                player2key = True
+                self.player2up.emit()
             else:
                 if key == Qt.Key_A:
-                    #self.player2.y -= 1
-                    player2key = True
+                    self.player2left.emit()
                 else:
                     if key == Qt.Key_D:
-                        #self.player2.y += 1
-                        player2key = True
+                        self.player2right.emit()
                     else:
                         if key == Qt.Key_S:
-                            #self.player2.x += 1
-                            player2key = True
-
-
-        if player1key:              #zameniti sa logikom za proveravanje kretanja itd, sa Qsignalom pokrenuti funkciju
-            self.player1.setGeometry((self.player1.y * 40) + 16, (self.player1.x * 40) + 16, 30, 30)
-        else:
-            if player2key:
-                self.player2.setGeometry((self.player2.y * 40) + 16, (self.player2.x * 40) + 16, 30, 30)
+                            self.player2down.emit()
 
     def closeEvent(self, event):
 
