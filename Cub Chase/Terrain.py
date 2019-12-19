@@ -21,54 +21,61 @@ class GameTerrain(QGridLayout):
 
             self.parentGameWindow.freespaces = 0
             self.TerrainMatrix = [[0 for x in range(self.terrainwidth)] for y in range(self.terrainheight)]
+            middle1 = self.terrainwidth / 2
+            middle2 = self.terrainheight / 2
 
             for y in range(len(self.TerrainMatrix)):
                 for x in range(len(self.TerrainMatrix[y])):
-                    if (x == math.floor(self.terrainwidth / 2) and y == math.floor(self.terrainheight / 2) or
-                    x == math.floor(self.terrainwidth / 2) - 1 and y == math.floor(self.terrainheight / 2) or
-                    x == math.floor(self.terrainwidth / 2) + 1 and y == math.floor(self.terrainheight / 2) or
-                    x == math.floor(self.terrainwidth / 2) and y == math.floor(self.terrainheight / 2) - 1 or
-                    x == math.floor(self.terrainwidth / 2) - 2 and y == math.floor(self.terrainheight / 2) - 2 or
-                    x == math.floor(self.terrainwidth / 2) - 2 and y == math.floor(self.terrainheight / 2) + 2 or
-                    x == math.floor(self.terrainwidth / 2) + 2 and y == math.floor(self.terrainheight / 2) - 2 or
-                    x == math.floor(self.terrainwidth / 2) + 2 and y == math.floor(self.terrainheight / 2) + 2 or
-                    x == math.floor(self.terrainwidth / 2) and y == math.floor(self.terrainheight / 2) + 1):
+                    if (x == math.floor(middle1) and y == math.floor(middle2) or
+                    x == math.floor(middle1) - 1 and y == math.floor(middle2) or
+                    x == math.floor(middle1) + 1 and y == math.floor(middle2) or
+                    x == math.floor(middle1) and y == math.floor(middle2) - 1 or
+                    x == math.floor(middle1) and y == math.floor(middle2) + 1):
                         self.TerrainMatrix[x][y] = TerrainTile(2, True)
                     else:
-                        if (x == 0 or x == self.terrainwidth - 1 or y == 0 or y == self.terrainheight - 1 or
-                        x == math.floor(self.terrainwidth / 2) + 1 and y == math.floor(self.terrainheight / 2) + 1 or
-                        x == math.floor(self.terrainwidth / 2) + 1 and y == math.floor(self.terrainheight / 2) - 1 or
-                        x == math.floor(self.terrainwidth / 2) - 1 and y == math.floor(self.terrainheight / 2) + 1 or
-                        x == math.floor(self.terrainwidth / 2) - 1 and y == math.floor(self.terrainheight / 2) - 1):
-                            self.TerrainMatrix[x][y] = TerrainTile(0, True)
+                        if (x == math.floor(middle1) - 2 and y == math.floor(middle2) - 2 or
+                        x == math.floor(middle1) - 2 and y == math.floor(middle2) + 2 or
+                        x == math.floor(middle1) + 2 and y == math.floor(middle2) - 2 or
+                        x == math.floor(middle1) + 2 and y == math.floor(middle2) + 2):
+                            self.TerrainMatrix[x][y] = TerrainTile(2, False)
                         else:
-                            if (x == math.floor(self.terrainwidth / 2) - 2 and
-                                                y == math.floor(self.terrainheight / 2) - 1 or
-                                x == math.floor(self.terrainwidth / 2) - 2 and
-                                                y == math.floor(self.terrainheight / 2) or
-                                x == math.floor(self.terrainwidth / 2) - 2 and
-                                                y == math.floor(self.terrainheight / 2) + 1 or
-                                x == math.floor(self.terrainwidth / 2) + 2 and
-                                                y == math.floor(self.terrainheight / 2) - 1 or
-                                x == math.floor(self.terrainwidth / 2) + 2 and
-                                                y == math.floor(self.terrainheight / 2) or
-                                x == math.floor(self.terrainwidth / 2) + 2 and
-                                                y == math.floor(self.terrainheight / 2) + 1 or
-                                x == math.floor(self.terrainwidth / 2) - 1 and
-                                                y == math.floor(self.terrainheight / 2) - 2 or
-                                x == math.floor(self.terrainwidth / 2) and
-                                                y == math.floor(self.terrainheight / 2) - 2 or
-                                x == math.floor(self.terrainwidth / 2) + 1 and
-                                                y == math.floor(self.terrainheight / 2) - 2 or
-                                x == math.floor(self.terrainwidth / 2) - 1 and
-                                                y == math.floor(self.terrainheight / 2) + 2 or
-                                x == math.floor(self.terrainwidth / 2) and
-                                                y == math.floor(self.terrainheight / 2) + 2 or
-                                x == math.floor(self.terrainwidth / 2) + 1 and
-                                                y == math.floor(self.terrainheight / 2) + 2):
-                                self.TerrainMatrix[x][y] = TerrainTile(1, True)
+                            if (x == 0 or x == self.terrainwidth - 1 or y == 0 or y == self.terrainheight - 1 or
+                            x == math.floor(middle1) + 1 and y == math.floor(middle2) + 1 or
+                            x == math.floor(middle1) + 1 and y == math.floor(middle2) - 1 or
+                            x == math.floor(middle1) - 1 and y == math.floor(middle2) + 1 or
+                            x == math.floor(middle1) - 1 and y == math.floor(middle2) - 1):
+                                self.TerrainMatrix[x][y] = TerrainTile(0, True)
                             else:
-                                self.TerrainMatrix[x][y] = TerrainTile(random.randint(0, 2), False)
+                                if (x == math.floor(middle1) - 2 and
+                                                    y == math.floor(middle2) - 1 or
+                                    x == math.floor(middle1) - 2 and
+                                                    y == math.floor(middle2) or
+                                    x == math.floor(middle1) - 2 and
+                                                    y == math.floor(middle2) + 1 or
+                                    x == math.floor(middle1) + 2 and
+                                                    y == math.floor(middle2) - 1 or
+                                    x == math.floor(middle1) + 2 and
+                                                    y == math.floor(middle2) or
+                                    x == math.floor(middle1) + 2 and
+                                                    y == math.floor(middle2) + 1 or
+                                    x == math.floor(middle1) - 1 and
+                                                    y == math.floor(middle2) - 2 or
+                                    x == math.floor(middle1) and
+                                                    y == math.floor(middle2) - 2 or
+                                    x == math.floor(middle1) + 1 and
+                                                    y == math.floor(middle2) - 2 or
+                                    x == math.floor(middle1) - 1 and
+                                                    y == math.floor(middle2) + 2 or
+                                    x == math.floor(middle1) and
+                                                    y == math.floor(middle2) + 2 or
+                                    x == math.floor(middle1) + 1 and
+                                                    y == math.floor(middle2) + 2):
+                                    self.TerrainMatrix[x][y] = TerrainTile(1, False)
+                                else:
+                                    if x == math.floor(middle1) and y > math.floor(middle2):
+                                        self.TerrainMatrix[x][y] = TerrainTile(1, False)
+                                    else:
+                                        self.TerrainMatrix[x][y] = TerrainTile(random.randint(0, 2), False)
 
             for y in range(len(self.TerrainMatrix)):
                 for x in range(len(self.TerrainMatrix[y])):
@@ -326,10 +333,26 @@ class GameTerrain(QGridLayout):
                     reachable = self.checkIfReachable(x, y + 1)
                 return reachable
 
-    def replacePrints(self, position):
+    def replacePrints(self, position, player):
 
-        temppicture = QPixmap("./Pictures/SandPrints.png")
+        if player == 1:
+            temppicture = QPixmap("./Pictures/SandPrints1.png")
+        else:
+            if player == 2:
+                temppicture = QPixmap("./Pictures/SandPrints2.png")
+
         self.itemAt(position).widget().setPixmap(temppicture.scaled(40, 40))
+
+        for y in range(len(self.TerrainMatrix)):
+            for x in range(len(self.TerrainMatrix[0])):
+                temp = self.TerrainMatrix[x][y]
+                if temp.terraintype == 1 and temp.footprints == 0:
+                    return
+
+        temppicture = QPixmap("./Pictures/Sand.png")
+        self.itemAt(len(self.TerrainMatrix) * len(self.TerrainMatrix[0]) - len(self.TerrainMatrix) / 2)\
+            .widget().setPixmap(temppicture.scaled(40, 40))
+        #LOGIKA ZA KRAJ PARTIJE
 
     def activateTrap(self, position, player, terrain):
 
@@ -367,5 +390,5 @@ class TerrainTile(object):
                 self.passable = False
             else:
                 self.passable = True
-        self.footprints = False
+        self.footprints = 0
         self.trap = 0

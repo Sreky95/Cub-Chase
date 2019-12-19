@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QGridLayout,
                              QVBoxLayout, QWidget, QPushButton, QLabel, QStackedLayout)
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QRect, QTimer
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QRect, QTimer, QThread
 from PyQt5.QtGui import QPainter, QColor, QPixmap, QKeyEvent
 import sys, random, math, Terrain, NPC, threading, Player, multiprocessing, time
 
@@ -50,12 +50,25 @@ def mapping(parent):
             pipe7s.send(0)
             break
         else:
-            #if LOGIKA ZA TRAP:
-            pipe1s.send(1)
-            pipe3s.send(1)
-            pipe5s.send(1)
-            pipe7s.send(1)
-            #else AKO JE UGAZIO U AKTIVIRAN TRAP:
+            if parent.NPC1.stunned:
+                pipe1s.send(2)
+            else:
+                pipe1s.send(1)
+
+            if parent.NPC2.stunned:
+                pipe3s.send(2)
+            else:
+                pipe3s.send(1)
+
+            if parent.NPC3.stunned:
+                pipe5s.send(2)
+            else:
+                pipe5s.send(1)
+
+            if parent.NPC4.stunned:
+                pipe7s.send(2)
+            else:
+                pipe7s.send(1)
 
         temp1 = pipe2r.recv()
         temp2 = pipe4r.recv()
@@ -64,19 +77,51 @@ def mapping(parent):
         if temp1:
             parent.NPC1.x = temp1[0]
             parent.NPC1.y = temp1[1]
+            if parent.player1.x == temp1[0] and parent.player1.y == temp1[1]:
+                parent.player1kill.emit()
+            if parent.player2.x == temp1[0] and parent.player2.y == temp1[1]:
+                parent.player2kill.emit()
             #print("1: " + str(temp1[1]) + " - " + str(temp1[0]))
+            if 0 < parent.layout.TerrainMatrix[temp1[0]][temp1[1]].trap < 10:
+                parent.layout.TerrainMatrix[temp1[0]][temp1[1]].trap = 0
+                parent.NPC1.stunned = True
+                parent.NPC1stun.emit()
         if temp2:
             parent.NPC2.x = temp2[0]
             parent.NPC2.y = temp2[1]
+            if parent.player1.x == temp2[0] and parent.player1.y == temp2[1]:
+                parent.player1kill.emit()
+            if parent.player2.x == temp2[0] and parent.player2.y == temp2[1]:
+                parent.player2kill.emit()
             #print("2: " + str(temp2[1]) + " - " + str(temp2[0]))
+            if 0 < parent.layout.TerrainMatrix[temp2[0]][temp2[1]].trap < 10:
+                parent.layout.TerrainMatrix[temp2[0]][temp2[1]].trap = 0
+                parent.NPC2.stunned = True
+                parent.NPC2stun.emit()
         if temp3:
             parent.NPC3.x = temp3[0]
             parent.NPC3.y = temp3[1]
+            if parent.player1.x == temp3[0] and parent.player1.y == temp3[1]:
+                parent.player1kill.emit()
+            if parent.player2.x == temp3[0] and parent.player2.y == temp3[1]:
+                parent.player2kill.emit()
             #print("3: " + str(temp3[1]) + " - " + str(temp3[0]))
+            if 0 < parent.layout.TerrainMatrix[temp3[0]][temp3[1]].trap < 10:
+                parent.layout.TerrainMatrix[temp3[0]][temp3[1]].trap = 0
+                parent.NPC3.stunned = True
+                parent.NPC3stun.emit()
         if temp4:
             parent.NPC4.x = temp4[0]
             parent.NPC4.y = temp4[1]
+            if parent.player1.x == temp4[0] and parent.player1.y == temp4[1]:
+                parent.player1kill.emit()
+            if parent.player2.x == temp4[0] and parent.player2.y == temp4[1]:
+                parent.player2kill.emit()
             #print("4: " + str(temp4[1]) + " - " + str(temp4[0]))
+            if 0 < parent.layout.TerrainMatrix[temp4[0]][temp4[1]].trap < 10:
+                parent.layout.TerrainMatrix[temp4[0]][temp4[1]].trap = 0
+                parent.NPC4.stunned = True
+                parent.NPC4stun.emit()
 
         parent.display_update.emit()
 
@@ -119,6 +164,12 @@ class GameWindow(QWidget):
     player2left = pyqtSignal()
     player2right = pyqtSignal()
     player2down = pyqtSignal()
+    NPC1stun = pyqtSignal()
+    NPC2stun = pyqtSignal()
+    NPC3stun = pyqtSignal()
+    NPC4stun = pyqtSignal()
+    player1kill = pyqtSignal()
+    player2kill = pyqtSignal()
 
     def __init__(self, parent):
 
@@ -163,6 +214,12 @@ class GameWindow(QWidget):
         self.player2left.connect(self.player2.moveleft)
         self.player2right.connect(self.player2.moveright)
         self.player2down.connect(self.player2.movedown)
+        self.NPC1stun.connect(self.NPC1.stun)
+        self.NPC2stun.connect(self.NPC2.stun)
+        self.NPC3stun.connect(self.NPC3.stun)
+        self.NPC4stun.connect(self.NPC4.stun)
+        self.player1kill.connect(self.player1.kill)
+        self.player2kill.connect(self.player2.kill)
 
     def guiUpdate(self):
 

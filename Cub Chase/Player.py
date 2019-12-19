@@ -19,14 +19,23 @@ class Player(QLabel):
         self.timer = None
 
         if self.playernumber == 1:
-            self.Model = QPixmap("./Pictures/Player1.png")
+            temp = QPixmap("./Pictures/Player1Down.png")
         else:
-            self.Model = QPixmap("./Pictures/Player2.png")
+            if self.playernumber == 2:
+                temp = QPixmap("./Pictures/Player2Down.png")
 
-        self.setPixmap(self.Model.scaled(30, 30))
+        self.setPixmap(temp.scaled(30, 30))
         self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
 
     def moveup(self):
+
+        if self.playernumber == 1:
+            temp = QPixmap("./Pictures/Player1Up.png")
+        else:
+            if self.playernumber == 2:
+                temp = QPixmap("./Pictures/Player2Up.png")
+
+        self.setPixmap(temp.scaled(30, 30))
 
         if not self.stunned:
             if self.TerrainMatrix[self.x - 1][self.y].terraintype > 0:
@@ -36,6 +45,14 @@ class Player(QLabel):
 
     def moveleft(self):
 
+        if self.playernumber == 1:
+            temp = QPixmap("./Pictures/Player1Left.png")
+        else:
+            if self.playernumber == 2:
+                temp = QPixmap("./Pictures/Player2Left.png")
+
+        self.setPixmap(temp.scaled(30, 30))
+
         if not self.stunned:
             if self.TerrainMatrix[self.x][self.y - 1].terraintype > 0:
                 self.y -= 1
@@ -44,6 +61,14 @@ class Player(QLabel):
 
     def moveright(self):
 
+        if self.playernumber == 1:
+            temp = QPixmap("./Pictures/Player1Right.png")
+        else:
+            if self.playernumber == 2:
+                temp = QPixmap("./Pictures/Player2Right.png")
+
+        self.setPixmap(temp.scaled(30, 30))
+
         if not self.stunned:
             if self.TerrainMatrix[self.x][self.y + 1].terraintype > 0:
                 self.y += 1
@@ -51,6 +76,14 @@ class Player(QLabel):
                 self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
 
     def movedown(self):
+
+        if self.playernumber == 1:
+            temp = QPixmap("./Pictures/Player1Down.png")
+        else:
+            if self.playernumber == 2:
+                temp = QPixmap("./Pictures/Player2Down.png")
+
+        self.setPixmap(temp.scaled(30, 30))
 
         if not self.stunned:
             if self.TerrainMatrix[self.x + 1][self.y].terraintype > 0:
@@ -63,7 +96,12 @@ class Player(QLabel):
         self.stunned = False
         self.parentGameWindow.layout.deleteTrap((self.y) * len(self.TerrainMatrix[0]) + self.x,
                 self.TerrainMatrix[self.x][self.y].terraintype)
-        self.TerrainMatrix[self.x][self.y].trap = 0
+
+    def kill(self):
+
+        self.x = math.floor(len(self.TerrainMatrix) / 2)
+        self.y = math.floor(len(self.TerrainMatrix[0]) / 2)
+        self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
 
     def checktile(self):
 
@@ -73,8 +111,11 @@ class Player(QLabel):
 
     def checknpc(self):
 
-        None
-        #check if there is an NPC in this tile
+        if (self.parentGameWindow.NPC1.x == self.x and self.parentGameWindow.NPC1.y == self.y) or \
+                (self.parentGameWindow.NPC2.x == self.x and self.parentGameWindow.NPC2.y == self.y) or \
+                (self.parentGameWindow.NPC3.x == self.x and self.parentGameWindow.NPC3.y == self.y) or \
+                (self.parentGameWindow.NPC4.x == self.x and self.parentGameWindow.NPC4.y == self.y):
+            self.kill()
 
     def checktrap(self):
 
@@ -95,9 +136,14 @@ class Player(QLabel):
     def checkprints(self):
 
         if self.TerrainMatrix[self.x][self.y].terraintype == 1:
-            if not self.TerrainMatrix[self.x][self.y].footprints:
-                self.TerrainMatrix[self.x][self.y].footprints = True
-                self.parentGameWindow.layout.replacePrints((self.y) * len(self.TerrainMatrix[0]) + self.x)
+            if self.TerrainMatrix[self.x][self.y].footprints == 0:
+                self.TerrainMatrix[self.x][self.y].footprints = self.playernumber
+                self.parentGameWindow.layout.replacePrints\
+                    ((self.y) * len(self.TerrainMatrix[0]) + self.x, self.playernumber)
+
+    def checkend(self):
+
+        None                #Logika za kraj
 
 
 

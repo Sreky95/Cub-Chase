@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QGridLayout,
                              QVBoxLayout, QWidget, QPushButton, QLabel, QStackedLayout)
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QTimer
 from PyQt5.QtGui import QPainter, QColor, QPixmap
 import sys, random, math, threading, time
 
@@ -10,10 +10,12 @@ class NPC(QLabel):
     def __init__(self, parent):
 
         super().__init__(parent)
+        self.parent = parent
         self.terrain = parent.layout.TerrainMatrix
         self.x = 0
         self.y = 0
         self.spawned = False
+        self.stunned = False
         self.passableMatrix = None
 
         self.spawn()
@@ -37,9 +39,17 @@ class NPC(QLabel):
                 self.y = y
                 self.spawned = True
 
-    def __update_position__(self, position):
+    def stun(self):
 
-        self.setGeometry((position[1] * 40) + 16, (position[0] * 40) + 16, 30, 30)
+        self.stuntimer = QTimer()
+        self.stuntimer.setSingleShot(True)
+        self.stuntimer.timeout.connect(self.unstun)
+        self.stuntimer.start(5000)
+
+    def unstun(self):
+
+        self.stunned = False
+        self.parent.layout.deleteTrap(self.y * len(self.terrain[0]) + self.x, self.terrain[self.x][self.y].terraintype)
 
 
 class NPCMovement(object):
@@ -74,18 +84,21 @@ class NPCMovement(object):
             break
         while True:
             task = self.piper.recv()
-            #print(task)
+            #print("Task" + str(task))
             if task == 0:
                 break
             else:
                 if task == 2:
                     None                            #Ubaciti logiku za trap
                 else:
+                    #print("test1")
                     decided = False
                     position = None
                     self.available = [False, False, False, False]
                     self.availableMoves()
+                    #print(self.available)
                     while not decided:
+                        #print("test2")
                         position = random.randint(0, 3)
                         if self.available[position]:
                             decided = True
@@ -102,10 +115,11 @@ class NPCMovement(object):
                                 if position == 3:
                                     self.x += 1
 
+            #print("test3")
             sendtuple = (self.x, self.y)
             self.pipes.send(sendtuple)
 
-            time.sleep(0.5)
+            time.sleep(0.2)
 
             """
         self.lock = parent.NPCLock
