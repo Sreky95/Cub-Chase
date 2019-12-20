@@ -77,10 +77,6 @@ def mapping(parent):
         if temp1:
             parent.NPC1.x = temp1[0]
             parent.NPC1.y = temp1[1]
-            if parent.player1.x == temp1[0] and parent.player1.y == temp1[1]:
-                parent.player1kill.emit()
-            if parent.player2.x == temp1[0] and parent.player2.y == temp1[1]:
-                parent.player2kill.emit()
             #print("1: " + str(temp1[1]) + " - " + str(temp1[0]))
             if 0 < parent.layout.TerrainMatrix[temp1[0]][temp1[1]].trap < 10:
                 parent.layout.TerrainMatrix[temp1[0]][temp1[1]].trap = 0
@@ -89,10 +85,6 @@ def mapping(parent):
         if temp2:
             parent.NPC2.x = temp2[0]
             parent.NPC2.y = temp2[1]
-            if parent.player1.x == temp2[0] and parent.player1.y == temp2[1]:
-                parent.player1kill.emit()
-            if parent.player2.x == temp2[0] and parent.player2.y == temp2[1]:
-                parent.player2kill.emit()
             #print("2: " + str(temp2[1]) + " - " + str(temp2[0]))
             if 0 < parent.layout.TerrainMatrix[temp2[0]][temp2[1]].trap < 10:
                 parent.layout.TerrainMatrix[temp2[0]][temp2[1]].trap = 0
@@ -101,10 +93,6 @@ def mapping(parent):
         if temp3:
             parent.NPC3.x = temp3[0]
             parent.NPC3.y = temp3[1]
-            if parent.player1.x == temp3[0] and parent.player1.y == temp3[1]:
-                parent.player1kill.emit()
-            if parent.player2.x == temp3[0] and parent.player2.y == temp3[1]:
-                parent.player2kill.emit()
             #print("3: " + str(temp3[1]) + " - " + str(temp3[0]))
             if 0 < parent.layout.TerrainMatrix[temp3[0]][temp3[1]].trap < 10:
                 parent.layout.TerrainMatrix[temp3[0]][temp3[1]].trap = 0
@@ -113,10 +101,6 @@ def mapping(parent):
         if temp4:
             parent.NPC4.x = temp4[0]
             parent.NPC4.y = temp4[1]
-            if parent.player1.x == temp4[0] and parent.player1.y == temp4[1]:
-                parent.player1kill.emit()
-            if parent.player2.x == temp4[0] and parent.player2.y == temp4[1]:
-                parent.player2kill.emit()
             #print("4: " + str(temp4[1]) + " - " + str(temp4[0]))
             if 0 < parent.layout.TerrainMatrix[temp4[0]][temp4[1]].trap < 10:
                 parent.layout.TerrainMatrix[temp4[0]][temp4[1]].trap = 0
@@ -168,8 +152,6 @@ class GameWindow(QWidget):
     NPC2stun = pyqtSignal()
     NPC3stun = pyqtSignal()
     NPC4stun = pyqtSignal()
-    player1kill = pyqtSignal()
-    player2kill = pyqtSignal()
 
     def __init__(self, parent):
 
@@ -218,8 +200,6 @@ class GameWindow(QWidget):
         self.NPC2stun.connect(self.NPC2.stun)
         self.NPC3stun.connect(self.NPC3.stun)
         self.NPC4stun.connect(self.NPC4.stun)
-        self.player1kill.connect(self.player1.kill)
-        self.player2kill.connect(self.player2.kill)
 
     def guiUpdate(self):
 

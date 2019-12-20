@@ -97,12 +97,6 @@ class Player(QLabel):
         self.parentGameWindow.layout.deleteTrap((self.y) * len(self.TerrainMatrix[0]) + self.x,
                 self.TerrainMatrix[self.x][self.y].terraintype)
 
-    def kill(self):
-
-        self.x = math.floor(len(self.TerrainMatrix) / 2)
-        self.y = math.floor(len(self.TerrainMatrix[0]) / 2)
-        self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
-
     def checktile(self):
 
         self.checkprints()
@@ -111,11 +105,8 @@ class Player(QLabel):
 
     def checknpc(self):
 
-        if (self.parentGameWindow.NPC1.x == self.x and self.parentGameWindow.NPC1.y == self.y) or \
-                (self.parentGameWindow.NPC2.x == self.x and self.parentGameWindow.NPC2.y == self.y) or \
-                (self.parentGameWindow.NPC3.x == self.x and self.parentGameWindow.NPC3.y == self.y) or \
-                (self.parentGameWindow.NPC4.x == self.x and self.parentGameWindow.NPC4.y == self.y):
-            self.kill()
+        None
+        #check if there is an NPC in this tile
 
     def checktrap(self):
 
@@ -140,10 +131,6 @@ class Player(QLabel):
                 self.TerrainMatrix[self.x][self.y].footprints = self.playernumber
                 self.parentGameWindow.layout.replacePrints\
                     ((self.y) * len(self.TerrainMatrix[0]) + self.x, self.playernumber)
-
-    def checkend(self):
-
-        None                #Logika za kraj
 
 
 
