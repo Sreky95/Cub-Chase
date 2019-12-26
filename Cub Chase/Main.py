@@ -1,14 +1,10 @@
-import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-                             QHBoxLayout, QVBoxLayout, QApplication, QMainWindow)
+from PyQt5.QtWidgets import (QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QGridLayout,
+                             QVBoxLayout, QWidget, QPushButton, QLabel, QStackedLayout)
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QRect, QTimer, QThread
+from PyQt5.QtGui import QPainter, QColor, QPixmap, QKeyEvent
+import sys, random, math, Terrain, NPC, threading, Player, multiprocessing, time
 
 
-<<<<<<< Updated upstream
-class GameWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Cub Chase")
-=======
 def mapping(parent):
 
     pipe1s, pipe1r = multiprocessing.Pipe()
@@ -112,42 +108,35 @@ def mapping(parent):
                 parent.NPC4stun.emit()
 
         parent.display_update.emit()
->>>>>>> Stashed changes
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
-        super().__init__()
-        self.initUI()
 
-    def initUI(self):
+        super().__init__()
         self.title = "Cub Chase"
-        self.top = 600
-        self.left = 400
+        self.top = 400
+        self.left = 600
         self.width = 680
         self.height = 300
+        self.mainGameWindow = None
 
         self.playButton = QPushButton("PLAY", self)
         self.playButton.move(300, 125)
         self.playButton.clicked.connect(self.gameWindow)
 
-        self.main_window()
-
-    def main_window(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.top, self.left, self.width, self.height)
+        self.setGeometry(self.left, self.top, self.width, self.height)
         self.show()
 
-
     def gameWindow(self):
-        self.mainGameWindow = GameWindow()
+
+        self.mainGameWindow = GameWindow(self)
         self.mainGameWindow.show()
         self.hide()
 
 
-<<<<<<< Updated upstream
-=======
 class GameWindow(QWidget):
 
     display_update = pyqtSignal()
@@ -261,7 +250,6 @@ class GameWindow(QWidget):
         self.close()
 
 
->>>>>>> Stashed changes
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MainWindow()
