@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QGridLayout,
                              QVBoxLayout, QWidget, QPushButton, QLabel, QStackedLayout)
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QRect
 from PyQt5.QtGui import QPainter, QColor, QPixmap
 import sys, random, math
 
@@ -12,7 +12,7 @@ class GameTerrain(QGridLayout):
         self.parentGameWindow = parent
         self.terrainwidth = size
         self.terrainheight = size
-        parent.setGeometry(550, 100, 40, 40)
+
         self.setSpacing(0)
         self.Trap1spawned = False
         loaded = False
@@ -335,12 +335,13 @@ class GameTerrain(QGridLayout):
 
     def replacePrints(self, position, player):
 
-        if player == 1:
+        """if player == 1:
             temppicture = QPixmap("./Pictures/SandPrints1.png")
         else:
             if player == 2:
-                temppicture = QPixmap("./Pictures/SandPrints2.png")
+                temppicture = QPixmap("./Pictures/SandPrints2.png")"""
 
+        temppicture = QPixmap("./Pictures/SandPrints1.png")
         self.itemAt(position).widget().setPixmap(temppicture.scaled(40, 40))
 
         for y in range(len(self.TerrainMatrix)):
