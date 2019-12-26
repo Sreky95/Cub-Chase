@@ -182,7 +182,44 @@ class GameWindow(QWidget):
         self.NPC2 = None
         self.NPC3 = None
         self.NPC4 = None
+
+        self.setGeometry(550, 100, 600, 690)
+
+        self.player1text = QLabel(self)
+        self.player2text = QLabel(self)
+        f = self.player1text.font()
+        f.setPointSize(18)
+        f.setWeight(75)
+        self.player1text.setFont(f)
+        self.player2text.setFont(f)
+        self.player1text.setGeometry(10, 575, 100, 100)
+        self.player2text.setGeometry(460, 575, 100, 100)
+        self.player1text.setText("Player 1")
+        self.player2text.setText("Player 2")
+
+        self.player1hp1 = QLabel(self)
+        self.player2hp1 = QLabel(self)
+        hppic = QPixmap("./Pictures/Health.gif")
+        self.player1hp1.setPixmap(hppic.scaled(25, 25))
+        self.player2hp1.setPixmap(hppic.scaled(25, 25))
+        self.player1hp1.setGeometry(115, 610, 30, 30)
+        self.player2hp1.setGeometry(565, 610, 30, 30)
+        self.player1hp2 = QLabel(self)
+        self.player2hp2 = QLabel(self)
+        self.player1hp2.setPixmap(hppic.scaled(25, 25))
+        self.player2hp2.setPixmap(hppic.scaled(25, 25))
+        self.player1hp2.setGeometry(115, 635, 30, 30)
+        self.player2hp2.setGeometry(565, 635, 30, 30)
+        self.player1hp3 = QLabel(self)
+        self.player2hp3 = QLabel(self)
+        self.player1hp3.setPixmap(hppic.scaled(25, 25))
+        self.player2hp3.setPixmap(hppic.scaled(25, 25))
+        self.player1hp3.setGeometry(115, 660, 30, 30)
+        self.player2hp3.setGeometry(565, 660, 30, 30)
+
         self.layout = Terrain.GameTerrain(self, 15)
+        self.layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+
         self.NPC1 = NPC.NPC(self)
         self.NPC2 = NPC.NPC(self)
         self.NPC3 = NPC.NPC(self)

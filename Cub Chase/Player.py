@@ -17,6 +17,7 @@ class Player(QLabel):
         self.playernumber = number
         self.stunned = False
         self.timer = None
+        self.lives = 3
 
         if self.playernumber == 1:
             temp = QPixmap("./Pictures/Player1Down.png")
@@ -24,72 +25,68 @@ class Player(QLabel):
             if self.playernumber == 2:
                 temp = QPixmap("./Pictures/Player2Down.png")
 
-        self.setPixmap(temp.scaled(30, 30))
-        self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+        self.setPixmap(temp.scaled(40, 40))
+        self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
 
     def moveup(self):
 
-        if self.playernumber == 1:
-            temp = QPixmap("./Pictures/Player1Up.png")
-        else:
-            if self.playernumber == 2:
-                temp = QPixmap("./Pictures/Player2Up.png")
-
-        self.setPixmap(temp.scaled(30, 30))
-
         if not self.stunned:
+            if self.playernumber == 1:
+                temp = QPixmap("./Pictures/Player1Up.png")
+            else:
+                if self.playernumber == 2:
+                    temp = QPixmap("./Pictures/Player2Up.png")
+
+            self.setPixmap(temp.scaled(40, 40))
             if self.TerrainMatrix[self.x - 1][self.y].terraintype > 0:
                 self.x -= 1
                 self.checktile()
-                self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+                self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
 
     def moveleft(self):
 
-        if self.playernumber == 1:
-            temp = QPixmap("./Pictures/Player1Left.png")
-        else:
-            if self.playernumber == 2:
-                temp = QPixmap("./Pictures/Player2Left.png")
-
-        self.setPixmap(temp.scaled(30, 30))
-
         if not self.stunned:
+            if self.playernumber == 1:
+                temp = QPixmap("./Pictures/Player1Left.png")
+            else:
+                if self.playernumber == 2:
+                    temp = QPixmap("./Pictures/Player2Left.png")
+
+            self.setPixmap(temp.scaled(40, 40))
             if self.TerrainMatrix[self.x][self.y - 1].terraintype > 0:
                 self.y -= 1
                 self.checktile()
-                self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+                self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
 
     def moveright(self):
 
-        if self.playernumber == 1:
-            temp = QPixmap("./Pictures/Player1Right.png")
-        else:
-            if self.playernumber == 2:
-                temp = QPixmap("./Pictures/Player2Right.png")
-
-        self.setPixmap(temp.scaled(30, 30))
-
         if not self.stunned:
+            if self.playernumber == 1:
+                temp = QPixmap("./Pictures/Player1Right.png")
+            else:
+                if self.playernumber == 2:
+                    temp = QPixmap("./Pictures/Player2Right.png")
+
+            self.setPixmap(temp.scaled(40, 40))
             if self.TerrainMatrix[self.x][self.y + 1].terraintype > 0:
                 self.y += 1
                 self.checktile()
-                self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+                self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
 
     def movedown(self):
 
-        if self.playernumber == 1:
-            temp = QPixmap("./Pictures/Player1Down.png")
-        else:
-            if self.playernumber == 2:
-                temp = QPixmap("./Pictures/Player2Down.png")
-
-        self.setPixmap(temp.scaled(30, 30))
-
         if not self.stunned:
+            if self.playernumber == 1:
+                temp = QPixmap("./Pictures/Player1Down.png")
+            else:
+                if self.playernumber == 2:
+                    temp = QPixmap("./Pictures/Player2Down.png")
+
+            self.setPixmap(temp.scaled(40, 40))
             if self.TerrainMatrix[self.x + 1][self.y].terraintype > 0:
                 self.x += 1
                 self.checktile()
-                self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+                self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
 
     def unstun(self):
 
@@ -99,9 +96,42 @@ class Player(QLabel):
 
     def kill(self):
 
-        self.x = math.floor(len(self.TerrainMatrix) / 2)
-        self.y = math.floor(len(self.TerrainMatrix[0]) / 2)
-        self.setGeometry((self.y * 40) + 16, (self.x * 40) + 16, 30, 30)
+        if self.lives > 0:
+            self.x = math.floor(len(self.TerrainMatrix) / 2)
+            self.y = math.floor(len(self.TerrainMatrix[0]) / 2)
+            self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
+            self.lives -= 1
+            self.removelife()
+        else:
+            temp = QPixmap("./Pictures/Nothing.png")
+            self.setPixmap(temp.scaled(40, 40))
+            self.stunned = True
+            self.x = math.floor(len(self.TerrainMatrix) / 2)
+            self.y = math.floor(len(self.TerrainMatrix[0]) / 2)
+            self.setGeometry((self.y * 40) + 11, (self.x * 40) + 11, 40, 40)
+
+    def removelife(self):
+
+        temp = QPixmap("./Pictures/Nothing.png")
+        if self.playernumber == 1:
+            if self.lives == 2:
+                self.parentGameWindow.player1hp3.setPixmap(temp)
+            else:
+                if self.lives == 1:
+                    self.parentGameWindow.player1hp2.setPixmap(temp)
+                else:
+                    if self.lives == 0:
+                        self.parentGameWindow.player1hp1.setPixmap(temp)
+        else:
+            if self.playernumber == 2:
+                if self.lives == 2:
+                    self.parentGameWindow.player2hp3.setPixmap(temp)
+                else:
+                    if self.lives == 1:
+                        self.parentGameWindow.player2hp2.setPixmap(temp)
+                    else:
+                        if self.lives == 0:
+                            self.parentGameWindow.player2hp1.setPixmap(temp)
 
     def checktile(self):
 

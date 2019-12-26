@@ -119,7 +119,7 @@ class NPCMovement(object):
             sendtuple = (self.x, self.y)
             self.pipes.send(sendtuple)
 
-            time.sleep(0.2)
+            time.sleep(0.5)
 
             """
         self.lock = parent.NPCLock
